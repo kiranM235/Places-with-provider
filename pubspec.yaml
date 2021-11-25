@@ -29,16 +29,18 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
-  http: ^0.13.3
+  get_it: ^7.2.0
+
+  http: ^0.13.4
 
 
-  path_provider: ^2.0.2
-  provider: ^5.0.0
+  path_provider: ^2.0.7
+  provider: ^6.0.1
 
-  rxdart: ^0.27.0
+  rxdart: ^0.27.3
 
-  shared_preferences: ^2.0.6
-  sqflite: ^2.0.0+3
+  shared_preferences: ^2.0.9
+  sqflite: ^2.0.0+4
 
 
 

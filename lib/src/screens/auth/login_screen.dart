@@ -1,17 +1,23 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:places/src/api/auth_api.dart';
+import 'package:places/src/core/bse_widget.dart';
+import 'package:places/src/core/locator/service_locator.dart';
 import 'package:places/src/screens/dashboard/dashboard_screen.dart';
 import 'package:places/src/screens/auth/signup_screen.dart';
 import 'package:places/src/utils/snackbar_helper.dart';
+import 'package:places/src/viewmodels/auth/login_view_model.dart';
 import 'package:places/src/widgets/custom_app_bar.dart';
 import 'package:places/src/widgets/input_email.dart';
 import 'package:places/src/widgets/input_password.dart';
 import 'package:places/src/widgets/shared/app_colors.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
-  final TextEditingController _emailController = TextEditingController(text:"outlook@gmail.com");
-  final TextEditingController _passwordController = TextEditingController(text: "Nepal@123");
+  final TextEditingController _emailController =
+  TextEditingController(text: "outlook@gmail.com");
+  final TextEditingController _passwordController =
+  TextEditingController(text: "Nepal@123");
 
   @override
   Widget build(BuildContext context) {
@@ -22,33 +28,36 @@ class LoginScreen extends StatelessWidget {
         context: context,
         subTitle: "Login to your \n account",
       ),
-      body:
-          Column(
-            children: <Widget>[
-              Expanded(
-                child: ListView(
-                  shrinkWrap: true,
-                  children: [
-                    SizedBox(height: 24),
-                    InputEmail(
-                      controller: _emailController,
-                    ),
-                    InputPassword(
-                      controller: _passwordController,
-                    ),
-                    _buildOption(context),
-                    _buildSubmitButton(context),
-                    SizedBox(height: 12),
-                    _buildTermsAndConditions(context),
-                    SizedBox(height: 12),
-                  ],
+      body: BaseWidget<LoginViewModel>(
+          model: locator<LoginViewModel>(),
+          builder: (BuildContext context, LoginViewModel model, Widget? child) {
+            return Column(
+              children: <Widget>[
+                Expanded(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      SizedBox(height: 24),
+                      InputEmail(
+                        controller: _emailController,
+                      ),
+                      InputPassword(
+                        controller: _passwordController,
+                      ),
+                      _buildOption(context),
+                      _buildSubmitButton(context, model),
+                      SizedBox(height: 12),
+                      _buildTermsAndConditions(context),
+                      SizedBox(height: 12),
+                    ],
+                  ),
                 ),
-              ),
-              _buildSignUpSection(context)
-            ],
-          ),
-
+                _buildSignUpSection(context)
+              ],
+            );
+          }),
     );
+
   }
 
   Widget _buildOption(BuildContext context) {
@@ -125,11 +134,14 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSubmitButton(BuildContext context) {
+  Widget _buildSubmitButton(BuildContext context, LoginViewModel model) {
     return Container(
       margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
       child: ButtonTheme(
-        minWidth: MediaQuery.of(context).size.width,
+        minWidth: MediaQuery
+            .of(context)
+            .size
+            .width,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
@@ -138,27 +150,19 @@ class LoginScreen extends StatelessWidget {
             padding: EdgeInsets.all(18.0),
             primary: primaryColor,
           ),
-          onPressed:() {
-                  _onSubmit(context);
-                },
-          child:  Text("Submit"),
+          onPressed: model.busy
+              ? null
+              : () {
+            model.login(_emailController.text, _passwordController.text);
+            _onSubmit(context);
+          },
+          child: model.busy ? CircularProgressIndicator() : Text("Submit"),
         ),
       ),
     );
   }
 
-  Future _onSubmit(BuildContext context) async {
-    final api = AuthApi();
-    final response =
-        await api.login(_emailController.text, _passwordController.text);
-    if (response.status) {
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-        return DashboardScreen();
-      }));
-    } else {
-      showSnackBar(context, response.message!);
-    }
-  }
+  Future _onSubmit(BuildContext context) async {}
 
   Widget _buildSignUpSection(BuildContext context) {
     return Column(
