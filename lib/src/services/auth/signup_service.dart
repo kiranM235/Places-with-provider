@@ -8,15 +8,15 @@ import 'package:places/src/services/local/db_provider.dart';
 
 import '../rx_data_service.dart';
 
-class LoginService {
+class SignupService {
   final AuthApi authApi = locator<AuthApi>();
 
   final DbProvider dbProvider = locator<DbProvider>();
   final CacheProvider cacheProvider = locator<CacheProvider>();
   final RxDataService rxDataService = locator<RxDataService>();
 
-  Future<NetworkResponseModel> login(String email, String password) async {
-    final NetworkResponseModel response = await authApi.login(email, password);
+  Future<NetworkResponseModel> signup(String name, dynamic phone, String email, String password) async {
+    final NetworkResponseModel response = await authApi.register(name, phone, email, password);
     if(response.status) {
       String token = response.data;
       ///1. todo use the token to retrieve the user detail and save it on the local database

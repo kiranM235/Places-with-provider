@@ -20,7 +20,7 @@ class App extends StatelessWidget {
       //   "/register": (_) => SignUpScreen(),
       // },
       onGenerateRoute: Router.onGenerateRoute,
-      initialRoute: RoutePaths.LOGIN,
+      initialRoute: RoutePaths.SPLASH,
     );
   }
 }

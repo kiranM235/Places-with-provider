@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:places/src/core/bse_widget.dart';
+import 'package:places/src/core/base_widget.dart';
 import 'package:places/src/core/locator/service_locator.dart';
 import 'package:places/src/core/navigation/route_paths.dart';
 import 'package:places/src/screens/dashboard/dashboard_screen.dart';

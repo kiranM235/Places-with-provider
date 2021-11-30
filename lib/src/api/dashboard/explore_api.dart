@@ -16,6 +16,7 @@ class ExploreApi {
       return NetworkResponseModel(status: true, data: list);
     } catch (e) {
       print("The places exception $e");
+      // "Exception:type int cannot be cast to type List";
       return NetworkResponseModel(
           status: false, message: "$e".replaceAll("Exception:", ""));
     }

@@ -1,4 +1,3 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:places/src/api/auth_api.dart';
@@ -137,12 +136,29 @@ class SignUpScreen extends StatelessWidget {
     await api.register(_nameController.text,_phoneController.text,
         _emailController.text, _passwordController.text);
     if (response.status) {
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-        return DashboardScreen();
-      }));
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_){
+            return DashboardScreen();
+          })
+      );
     } else {
       showSnackBar(context, response.message!);
     }
+  }
+  bool validateData(BuildContext context) {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    final name = _nameController.text;
+    final phone = _phoneController.text;
+    if(!email.contains("@") || !email.contains(".")){
+      showSnackBar(context, "invalid email address");
+      return false;
+    }
+    if(password.length <4) {
+      showSnackBar(context, "Password must be at least 4 characters long");
+      return false;
+    }
+    return true;
   }
 
   Widget _buildSignInSection(BuildContext context) {
@@ -155,7 +171,7 @@ class SignUpScreen extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text("Alreay have an account?"),
+            Text("Already have an account?"),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();

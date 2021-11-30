@@ -1,35 +1,66 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
+import 'package:places/src/core/base_widget.dart';
+import 'package:places/src/core/locator/service_locator.dart';
 import 'package:places/src/screens/dashboard/explore_screen.dart';
 import 'package:places/src/screens/dashboard/favorite_screen.dart';
 import 'package:places/src/screens/dashboard/profile_screen.dart';
+import 'package:places/src/utils/snackbar_helper.dart';
+import 'package:places/src/viewmodels/dashboard/dashboard_view_model.dart';
 import 'package:places/src/widgets/shared/app_colors.dart';
 
-class DashboardScreen extends StatefulWidget {
-  @override
-  _DashboardScreenState createState() => _DashboardScreenState();
-}
-
-class _DashboardScreenState extends State<DashboardScreen> {
+class DashboardScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   static const screens = [ExploreScreen(), FavoriteScreen(), ProfileScreen()];
   static const titles = ["Explore", "Favorite", "Profile"];
-  int _currentIndex = 0;
+
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: _buildAppBar(context),
-      body: _buildBody(),
-      bottomNavigationBar: _buildBottomNavigationBar(context),
-      drawer: _buildNavigationDrawer(context),
+    return BaseWidget<DashboardViewModel>(
+        model: locator<DashboardViewModel>(),
+        onModelReady: (model) {
+          _onModelReady(context, model);
+        },
+        builder: (BuildContext context, DashboardViewModel model,
+            Widget? child) {
+          return Scaffold(
+            key: _scaffoldKey,
+            appBar: _buildAppBar(context, model),
+            body: _buildBody(model),
+            bottomNavigationBar: _buildBottomNavigationBar(context, model),
+            drawer: _buildNavigationDrawer(context, model),
+          );
+        }
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) {
+  void _onModelReady(BuildContext context, DashboardViewModel model) {
+    ///1. show a snack bar when connectivity changes
+    _listenUserLocation(context, model);
+
+    ///2. record user location
+    _listenConnectivity(context);
+  }
+
+  void _listenConnectivity(BuildContext context) {
+    Connectivity().onConnectivityChanged.listen((event) {
+      print("Connection status $event");
+      if (event == ConnectivityResult.none) {
+        showSnackBar(context, "No internet connection");
+      } else {
+        showSnackBar(context, "Back online");
+      }
+    });
+  }
+
+
+  AppBar _buildAppBar(BuildContext context, DashboardViewModel model) {
     return AppBar(
-      title: Text(titles[_currentIndex], style: TextStyle(color: blackColor87)),
+      title: Text(
+          titles[model.currentIndex], style: TextStyle(color: blackColor87)),
       backgroundColor: whiteColor,
       leading: IconButton(
         icon: Icon(
@@ -59,11 +90,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildBody() {
-    return screens[_currentIndex];
+  Widget _buildBody(DashboardViewModel model) {
+    return screens[model.currentIndex];
   }
 
-  Widget _buildBottomNavigationBar(BuildContext context) {
+  Widget _buildBottomNavigationBar(BuildContext context,
+      DashboardViewModel model) {
     return BottomNavigationBar(
       items: [
         BottomNavigationBarItem(icon: Icon(Icons.explore), label: "Explore"),
@@ -71,12 +103,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             icon: Icon(Icons.favorite_outlined), label: "Favorite"),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
       ],
-      onTap: (int index) {
-        setState(() {
-          _currentIndex = index;
-        });
-      },
-      currentIndex: _currentIndex,
+      onTap: model.setCurrentIndex,
+      currentIndex: model.currentIndex,
       showSelectedLabels: true,
       showUnselectedLabels: true,
       selectedIconTheme: IconThemeData(color: blackColor87),
@@ -88,7 +116,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildNavigationDrawer(BuildContext context) {
+  Widget _buildNavigationDrawer(BuildContext context,
+      DashboardViewModel model) {
     return Container(
       width: 200,
       color: whiteColor,
@@ -102,33 +131,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ListTile(
               title: Text("Explore"),
               trailing: Icon(Icons.explore),
-              selected: _currentIndex == 0,
+              selected: model.currentIndex == 0,
               onTap: () {
-                setState(() {
-                  _currentIndex = 0;
-                });
+                model.setCurrentIndex(0);
                 Navigator.of(context).pop();
               },
             ),
             ListTile(
               title: Text("Favorite"),
               trailing: Icon(Icons.favorite_outlined),
-              selected: _currentIndex == 1,
+              selected: model.currentIndex == 1,
               onTap: () {
-                setState(() {
-                  _currentIndex = 1;
-                });
+                model.setCurrentIndex(1);
                 Navigator.of(context).pop();
               },
             ),
             ListTile(
               title: Text("Profile"),
               trailing: Icon(Icons.person),
-              selected: _currentIndex == 2,
+              selected: model.currentIndex == 2,
               onTap: () {
-                setState(() {
-                  _currentIndex = 2;
-                });
+                model.setCurrentIndex(2);
                 Navigator.of(context).pop();
               },
             ),
@@ -144,5 +167,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
     );
+  }
+
+  void _listenUserLocation(BuildContext context,
+      DashboardViewModel model) async {
+    Location location = Location();
+
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+    LocationData _locationData;
+
+    _serviceEnabled = await location.serviceEnabled();
+    print("Service enabled $_serviceEnabled");
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        showSnackBar(context,
+            "Places needs your location to accurately show places near you");
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    // print("Location permission $_permissionGranted");
+
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        showSnackBar(
+            context, "Places needs  location permission  show places near you");
+        return;
+      }
+    }
+
+    _locationData = await location.getLocation();
+    /// store in app state
+    model.addUserLocation(_locationData);
+    print("The user location $_locationData");
   }
 }
