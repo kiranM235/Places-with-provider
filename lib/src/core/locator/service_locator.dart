@@ -10,6 +10,7 @@ import 'package:places/src/services/rx_data_service.dart';
 import 'package:places/src/services/splash/splash_service.dart';
 import 'package:places/src/viewmodels/auth/login_view_model.dart';
 import 'package:places/src/viewmodels/auth/signup_view_model.dart';
+import 'package:places/src/viewmodels/dashboard/add_new_place_view_model.dart';
 import 'package:places/src/viewmodels/dashboard/explore_view_model.dart';
 import 'package:places/src/viewmodels/splash/splash_view_model.dart';
 import 'package:places/src/viewmodels/dashboard/dashboard_view_model.dart';
@@ -34,5 +35,6 @@ void setupLocator() {
   locator.registerFactory<SplashViewModel>(() => SplashViewModel());
   locator.registerFactory<ExploreViewModel>(() => ExploreViewModel());
   locator.registerFactory<DashboardViewModel>(() => DashboardViewModel());
+  locator.registerFactory<AddNewPlaceViewModel>(() => AddNewPlaceViewModel());
   locator.registerFactory<SignupViewModel>(() => SignupViewModel());
 }

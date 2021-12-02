@@ -3,6 +3,7 @@ import 'package:places/src/core/navigation/route_paths.dart';
 import 'package:places/src/screens/auth/login_screen.dart';
 import 'package:places/src/screens/auth/signup_screen.dart';
 import 'package:places/src/screens/dashboard/dashboard_screen.dart';
+import 'package:places/src/screens/dashboard/add_new_place_view.dart';
 import 'package:places/src/screens/splash/splash_screen.dart';
 
 class Router {
@@ -25,6 +26,10 @@ class Router {
       case RoutePaths.DASHBOARD:
         return MaterialPageRoute(builder: (_) {
           return DashboardScreen();
+        });
+      case RoutePaths.ADD_NEW:
+        return MaterialPageRoute(builder: (_) {
+          return AddNewPlaceView();
         });
 
       default:

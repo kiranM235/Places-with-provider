@@ -33,7 +33,11 @@ dependencies:
 
   get_it: ^7.2.0
 
+  google_maps_flutter: ^2.1.1
+
   http: ^0.13.4
+
+  image_picker: ^0.8.4+4
 
   location: ^4.3.0
 

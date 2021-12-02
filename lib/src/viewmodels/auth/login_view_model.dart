@@ -6,9 +6,9 @@ import 'package:places/src/viewmodels/base_view_model.dart';
 class LoginViewModel extends BaseViewModel {
   final LoginService service = locator<LoginService>();
 
-  Future<NetworkResponseModel> login(String email, String password) {
+  Future<NetworkResponseModel> login(String email, String password) async{
     setBusy(true);
-    final res = service.login(email, password);
+    final res = await service.login(email, password);
     setBusy(false);
     return res;
   }

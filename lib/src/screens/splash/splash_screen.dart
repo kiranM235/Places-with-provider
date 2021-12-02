@@ -35,7 +35,7 @@ class SplashScreen extends StatelessWidget {
     await model.initialize();
     String path = RoutePaths.LOGIN;
     if(model.isAlreadyLoggedIn){
-      path = RoutePaths.DASHBOARD;
+      path = RoutePaths.LOGIN;
     }
     /// todo wait for 2 seconds
     await Future.delayed(Duration(seconds: 2));
