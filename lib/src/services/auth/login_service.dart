@@ -1,4 +1,5 @@
 import 'package:places/src/api/auth_api.dart';
+import 'package:places/src/core/authenticated_request.dart';
 import 'package:places/src/core/constants/app_constants.dart';
 import 'package:places/src/core/locator/service_locator.dart';
 import 'package:places/src/model/network_response_model.dart';
@@ -19,9 +20,7 @@ class LoginService {
     final NetworkResponseModel response = await authApi.login(email, password);
     if(response.status) {
       String token = response.data;
-      ///1. todo use the token to retrieve the user detail and save it on the local database
-      /// 2.todo set already logged in as true
-      /// 3. todo store the token in cache
+      authenticatedRequest.setDefaultHeaders({"x-auth-token":token});
       final NetworkResponseModel profileResponse = await authApi.fetchUserDetail(token);
       if(!profileResponse.status){
         return profileResponse;
@@ -30,6 +29,8 @@ class LoginService {
       await dbProvider.insertUser(user);
       rxDataService.addUser(user);
       cacheProvider.setStringValue(TOKEN_KEY, token);
+
+
       return NetworkResponseModel(status: true);
     }
     return response;

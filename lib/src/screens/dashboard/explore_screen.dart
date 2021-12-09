@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:places/src/core/base_widget.dart';
 import 'package:places/src/core/locator/service_locator.dart';
+import 'package:places/src/core/navigation/route_paths.dart';
 import 'package:places/src/services/rx_data_service.dart';
 import 'package:places/src/viewmodels/dashboard/explore_view_model.dart';
 import 'package:places/src/widgets/dashboard/place_item.dart';
@@ -42,7 +43,7 @@ class ExploreScreen extends StatelessWidget {
               place: model.allPlaces[index],
               location: locator<RxDataService>().currentLocation,
               onTap: (place){
-
+                Navigator.of(context).pushNamed(RoutePaths.PLACE_DETAIL,arguments:  place);
           });
       },
     );

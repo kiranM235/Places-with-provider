@@ -1,3 +1,4 @@
+import 'package:places/src/core/authenticated_request.dart';
 import 'package:places/src/core/constants/app_constants.dart';
 import 'package:places/src/core/locator/service_locator.dart';
 import 'package:places/src/model/user_model.dart';
@@ -27,6 +28,8 @@ class SplashService {
     if(token == null){
       return;
     }
+    authenticatedRequest.setDefaultHeaders({"x-auth-token":token});
+
     ///todo 3. decide whether the user is already logged in or not
     isAlreadyLoggedIn = true;
   }

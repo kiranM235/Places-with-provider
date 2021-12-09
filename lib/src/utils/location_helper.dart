@@ -1,14 +1,17 @@
 import 'dart:math';
+
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 // import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 class LocationHelper {
   static const String mapBoxApiKey =
       "pk.eyJ1IjoiYWRoaWthcmktbWl0aHVuIiwiYSI6ImNrNGNlazEwOTBqN3YzZXBicWw3ZzdjaDcifQ.PTPsY8Dv4iXObiS4aJWlLg";
-  // static String generateLocationPreviewImage(LatLng latLng) {
-  //   final url =
-  //       "https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${latLng.longitude},${latLng.latitude},14.25,0,60/600x600?access_token=$mapBoxApiKey";
-  //   print("$url");
-  //   return url;
-  // }
+  static String generateLocationPreviewImage(LatLng latLng) {
+    final url =
+        "https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${latLng.longitude},${latLng.latitude},14.25,0,60/600x600?access_token=$mapBoxApiKey";
+    print("Static image $url");
+    return url;
+  }
   static double calculateDistanceInKm(
       {required double latitude1,
         required double longitude1,

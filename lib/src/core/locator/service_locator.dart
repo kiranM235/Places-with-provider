@@ -7,6 +7,7 @@ import 'package:places/src/services/dashboard/explore_service.dart';
 import 'package:places/src/services/local/cache_provider.dart';
 import 'package:places/src/services/local/db_provider.dart';
 import 'package:places/src/services/rx_data_service.dart';
+import 'package:places/src/services/splash/navigation_service.dart';
 import 'package:places/src/services/splash/splash_service.dart';
 import 'package:places/src/viewmodels/auth/login_view_model.dart';
 import 'package:places/src/viewmodels/auth/signup_view_model.dart';
@@ -23,6 +24,7 @@ void setupLocator() {
   locator.registerLazySingleton<DbProvider>(() => DbProvider());
   locator.registerLazySingleton<CacheProvider>(() => CacheProvider());
   locator.registerLazySingleton<RxDataService>(() => RxDataService());
+  locator.registerLazySingleton<NavigationService>(() => NavigationService());
 
   /// dependent services
   locator.registerLazySingleton<LoginService>(() => LoginService());
