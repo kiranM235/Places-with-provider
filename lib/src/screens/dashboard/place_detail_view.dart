@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:places/src/model/dashboard/place_model.dart';
 import 'package:places/src/utils/image_helper.dart';
 import 'package:places/src/utils/location_helper.dart';
+import 'package:places/src/widgets/dashboard/favorite_section.dart';
 import 'package:places/src/widgets/map_view.dart';
 
 class PlaceDetailView extends StatelessWidget {
@@ -109,9 +110,9 @@ class PlaceDetailView extends StatelessWidget {
             title: Text("${place.name}"),
           ),
           Positioned(
-            child: Icon(Icons.favorite),
-            right: 32,
-            top: 32,
+            child: FavoriteSection(placeId: place.sId!),
+            right: 16,
+            top: 48,
           )
         ],
       ),
