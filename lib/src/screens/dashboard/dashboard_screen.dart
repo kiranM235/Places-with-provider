@@ -58,7 +58,8 @@ class DashboardScreen extends StatelessWidget {
   }
 
 
-  AppBar _buildAppBar(BuildContext context, DashboardViewModel model) {
+  AppBar? _buildAppBar(BuildContext context, DashboardViewModel model) {
+    if(model.currentIndex == 2) return null;
     return AppBar(
       title: Text(
           titles[model.currentIndex], style: TextStyle(color: blackColor87)),
@@ -76,7 +77,9 @@ class DashboardScreen extends StatelessWidget {
         },
       ),
       actions: [
-        IconButton(
+        model.currentIndex != 0
+        ? Container()
+        : IconButton(
           icon: Icon(
             Icons.add,
             size: 40,
