@@ -6,4 +6,6 @@ class RoutePaths {
   static const ADD_NEW = "add_new";
   static const PLACE_DETAIL = "place_detail";
   static const MAP = "map";
+  static const PRIVACY_POLICY = "PRIVACY_POLICY";
+  static const TERMS_CONDITION = "TERMS_CONDITION";
 }

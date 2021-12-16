@@ -51,4 +51,8 @@ class ProfileDetailService {
     }
     return response;
   }
+
+  void pushTokenToServer(String? fcmToken) {
+    api.updateToken(fcmToken!);
+  }
 }

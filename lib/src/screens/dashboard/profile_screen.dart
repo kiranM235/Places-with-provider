@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:places/src/screens/dashboard/my_places_view.dart';
+import 'package:places/src/screens/dashboard/profile_detail_view.dart';
 import 'package:places/src/widgets/shared/app_colors.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -49,8 +51,8 @@ class _ProfileScreenState extends State<ProfileScreen>
     return TabBarView(
       controller: _tabController,
       children: [
-        Container(width: 20, height: 20, color: redColor),
-        Container(width: 20, height: 20, color: greenColor),
+        ProfileDetail(),
+        MyPlacesScreen(),
       ],
     );
   }

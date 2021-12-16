@@ -15,7 +15,7 @@ class MyPlacesViewModel extends BaseViewModel {
     setBusy(false);
   }
 
-  Future<NetworkResponseModel> removePlace(String placeId) {
+  Future<NetworkResponseModel> removePlace(String placeId, PlaceModel place) {
     return service.removeItem(placeId);
   }
 }

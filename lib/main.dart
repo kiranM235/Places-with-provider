@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart' hide Router;
 import 'package:places/src/core/locator/service_locator.dart';
 import 'package:places/src/core/navigation/route_paths.dart';
@@ -5,8 +7,11 @@ import 'package:places/src/core/navigation/router.dart';
 
 Future<void> main() async {
   setupLocator();
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   runApp(App());
 }
+Future<void> handleBackgroundMessage(RemoteMessage message) async {}
 
 class App extends StatelessWidget {
   @override
